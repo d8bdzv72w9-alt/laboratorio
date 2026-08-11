@@ -1,0 +1,147 @@
+.jumboyton {
+        background-color: rgb(3,12, 20);
+        color: #ffffff;
+        padding: 100px 25px;
+        font-family: sans-serif;
+        text-align: center;
+    }
+    .container-fluid{
+        padding: 40px 50px;
+        
+    }
+    .bg-gray{
+        background-color: #DCDCDC;
+        
+    }
+    .container-fluid-productos{
+        text-align: center;
+        padding: 40px 50px;
+    }
+    .container-fluid-tienda{
+        background-color: rgb(226, 201, 166);
+        text-align: center;
+        padding: 40px 50px;
+    }
+    .container-fluid-equipo{
+        text-align: center;
+        padding: 40px 50px;
+    }
+    .card-equipo {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgb(0, 0, 0);
+    }
+    .card-equipo img {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    .card-equipo:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(148, 73, 73, 0.996);
+    }
+    .row {
+    margin-left: 0;
+    margin-right: 0;
+    }
+    body {
+    overflow-x: hidden;
+    }
+    .paginafoot{
+        background-color: rgb(3,12,20); 
+        color: #ffffff; 
+        text-align: center; 
+        padding: 20px; 
+        font-family: sans-serif;
+    }
+    .btn-primary{
+        display: inline-block;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            padding: 10px 25px;
+            background-color: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+    }
+    /* ===== SECCIÓN CONTACTO ===== */
+.seccion-contacto {
+    
+    padding: 40px 30px;
+}
+
+.titulo-contacto {
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+}
+
+/* Info de contacto izquierda */
+.info-contacto h5 {
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.info-contacto p {
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.info-contacto i {
+    margin-right: 8px;
+    color: #1a1a1a;
+}
+
+/* Campos del formulario */
+.campo-form {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    padding: 8px 4px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    outline: none;
+    color: #1a1a1a;
+}
+
+.campo-form::placeholder {
+    color: #444;
+}
+
+.campo-form:focus {
+    border-bottom: 1.5px solid #1a1a1a;
+}
+
+/* Botón Enviar */
+.btn-enviar {
+    background-color: #3a9fd4;
+    color: #fff;
+    border: none;
+    padding: 8px 28px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-enviar:hover {
+    background-color: #2e86b5;
+}
+
+    @media screen and (min-width: 760px){
+        img {
+            max-width: 150px;
+        }
+    }
