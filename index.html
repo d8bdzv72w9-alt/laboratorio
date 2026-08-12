@@ -6,14 +6,16 @@
   <title>MOVIEBOXD</title>
   <style>
 
-    /* =====================================================
-       RESET BÁSICO
-       ===================================================== */
+    /* Dejo el reset básico igual que en el código original,
+       no le cambié nada aquí */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     img { max-width: 100%; height: auto; display: block; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      /* aquí sí cambié el fondo y el color de texto, en el original
+         era blanco con texto oscuro, yo lo puse oscuro (tipo cine)
+         porque va con la temática de MOVIEBOXD */
       background: #16110c;
       color: #ede4d3;
       line-height: 1.6;
@@ -31,26 +33,24 @@
     }
 
 
-    /* =====================================================
-       PARTE 3: PALETA DE COLORES DE LA EMPRESA (MOVIEBOXD)
-       Inspirada en la paleta fría/cálida de la película
-       "Buffalo '66": marrón oscuro de fondo, crema como
-       color base de texto, mostaza como color de marca,
-       azul apagado y rojo ladrillo como acentos.
-       ===================================================== */
+    /* Esto lo agregué yo, no estaba en el original: son variables
+       de color para no repetir los mismos códigos hexadecimales
+       en todo el CSS. Los colores los saqué de la paleta de la
+       película Buffalo '66 (marrón, crema, mostaza, azul apagado
+       y rojo ladrillo) como me pidieron para la empresa MOVIEBOXD */
     :root {
-      --moviebox-fondo:    #2b2118; /* marrón oscuro, tipo diner de la película */
-      --moviebox-fondo-2:  #3d2f22; /* marrón un poco más claro, para el submenú */
-      --moviebox-crema:    #ede4d3; /* crema, color de texto principal */
-      --moviebox-mostaza:  #d4a94c; /* mostaza, color de marca / hover */
-      --moviebox-azul:     #6e8fa3; /* azul apagado, acento secundario */
-      --moviebox-rojo:     #b24b33; /* rojo ladrillo, usado en la animación del botón */
+      --moviebox-fondo:    #2b2118;
+      --moviebox-fondo-2:  #3d2f22;
+      --moviebox-crema:    #ede4d3;
+      --moviebox-mostaza:  #d4a94c;
+      --moviebox-azul:     #6e8fa3;
+      --moviebox-rojo:     #b24b33;
     }
 
 
-    /* =====================================================
-       CABECERA
-       ===================================================== */
+    /* La cabecera tampoco estaba en el código base del ejemplo de
+       hamburguesa (ese solo traía el <header> sin estilos), así
+       que este bloque completo lo armé yo para que se viera bien */
     .cabecera {
       background: var(--moviebox-fondo);
       border-bottom: 1px solid #4a3a2a;
@@ -75,61 +75,89 @@
     }
 
 
-    /* =====================================================
-       PARTE 1: ESTRUCTURA HTML DEL MENÚ
-       El truco "sin JavaScript" es un <input type="checkbox">
-       oculto (#toggle-menu). Su estado checked/unchecked se
-       controla con el <label for="toggle-menu"> (el botón
-       hamburguesa) y se lee en CSS con el selector ~ (hermano
-       general). Así, sin una sola línea de JS, el checkbox
-       "recuerda" si el menú está abierto o cerrado.
-       ===================================================== */
+    /* A partir de aquí empieza el código del menú hamburguesa,
+       la base es la misma que la del ejemplo original:
+       - un input checkbox oculto (.toggle-menu-input)
+       - un label que hace de botón (.hamburguesa)
+       - el selector ~ para "leer" el estado del checkbox en CSS
+       No inventé esta lógica, la mantuve igual, lo que cambié
+       fue el estilo visual de cada parte */
 
-    /* Ocultamos el checkbox pero lo dejamos funcional (sigue
-       recibiendo el click a través del <label>) */
+    /* Esto es igual al original: el checkbox se oculta pero
+       sigue funcionando porque el label sigue apuntando a su id */
     .toggle-menu-input {
       position: absolute;
       opacity: 0;
       pointer-events: none;
     }
 
-    /* Botón hamburguesa: tres líneas (span) apiladas */
+    /* Aquí sí le metí mano al botón. En el original era solo
+       "display:flex; flex-direction:column; gap:5px; cursor:pointer;
+       padding:0.5rem" y ya. Yo le agregué el fondo circular, el
+       borde y las transiciones de hover/active para que se viera
+       más como un botón real y no una hamburguesa pelada */
     .hamburguesa {
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
       gap: 5px;
-      width: 32px;
-      height: 32px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--moviebox-fondo-2);
+      border: 1px solid #4a3a2a;
       cursor: pointer;
       z-index: 110;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
     }
 
+    /* Esto no estaba en el original, lo agregué para que el botón
+       reaccione al pasar el mouse */
+    .hamburguesa:hover {
+      background: #4a3a2a;
+      border-color: var(--moviebox-mostaza);
+    }
+
+    /* Esto tampoco estaba: un pequeño "encogimiento" cuando uno
+       hace clic, para que se sienta más interactivo */
+    .hamburguesa:active {
+      transform: scale(0.94);
+    }
+
+    /* En el original las líneas medían 24px de ancho y 2px de alto,
+       yo las dejé un poco más chicas (20px) porque ahora están
+       dentro del círculo y necesitaban más margen alrededor */
     .hamburguesa span {
       display: block;
-      width: 26px;
-      height: 3px;
+      width: 20px;
+      height: 2px;
       border-radius: 2px;
       background: var(--moviebox-crema);
-      /* PARTE 4: transición base para poder animar transform,
-         opacity y color cuando el checkbox se marque */
       transition: transform 0.3s ease, opacity 0.2s ease, background 0.3s ease;
     }
 
-    /* =====================================================
-       PARTE 4: ANIMACIÓN DEL BOTÓN HAMBURGUESA
-       Cuando el checkbox está :checked, seleccionamos las
-       tres líneas del hamburguesa (que es su hermano en el
-       HTML) y las transformamos:
-       - Línea 1: baja y rota 45° (mitad superior de la X)
-       - Línea 2: desaparece (opacity: 0)
-       - Línea 3: sube y rota -45° (mitad inferior de la X)
-       Además cambia de color crema -> rojo, como pide el
-       enunciado ("cambio de color" + "rotación" + "X").
-       ===================================================== */
-    .toggle-menu-input:checked ~ .hamburguesa span:nth-child(1) {
-      transform: translateY(8px) rotate(45deg);
+    /* Este anillo de foco no venía en el original, lo agregué
+       para que se note cuando alguien navega con Tab (accesibilidad) */
+    .toggle-menu-input:focus-visible ~ .hamburguesa {
+      outline: 2px solid var(--moviebox-mostaza);
+      outline-offset: 2px;
+    }
+
+    /* Esta es la parte de la animación que pedía la guía (que el
+       icono de hamburguesa se convierta en X). La lógica de las
+       transformaciones (translateY + rotate + opacity 0 en la del
+       medio) es la misma idea del original, pero yo le agregué el
+       cambio de color de crema a rojo, y además ahora se tiñe de
+       rojo la cápsula completa, no solo las líneas */
+    .toggle-menu-input:checked ~ .hamburguesa {
       background: var(--moviebox-rojo);
+      border-color: var(--moviebox-rojo);
+    }
+
+    .toggle-menu-input:checked ~ .hamburguesa span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+      background: var(--moviebox-crema);
     }
 
     .toggle-menu-input:checked ~ .hamburguesa span:nth-child(2) {
@@ -137,17 +165,16 @@
     }
 
     .toggle-menu-input:checked ~ .hamburguesa span:nth-child(3) {
-      transform: translateY(-8px) rotate(-45deg);
-      background: var(--moviebox-rojo);
+      transform: translateY(-7px) rotate(-45deg);
+      background: var(--moviebox-crema);
     }
 
 
-    /* =====================================================
-       PARTE 2: MENÚ DE NAVEGACIÓN (nav-mobile)
-       Oculto por defecto en móvil. Solo se muestra cuando el
-       checkbox está marcado, gracias al selector
-       .toggle-menu-input:checked ~ .nav-mobile
-       ===================================================== */
+    /* El menú en sí (.nav-mobile) lo dejé funcionando exactamente
+       como en el original: oculto por defecto y se muestra con
+       .toggle-menu-input:checked ~ .nav-mobile. Lo único que
+       cambié fue el color de los enlaces para que combinen con
+       la paleta de MOVIEBOXD */
     .nav-mobile {
       display: none;
       flex-direction: column;
@@ -173,21 +200,18 @@
       color: var(--moviebox-mostaza);
     }
 
-    /* --- Las 2 opciones nuevas pedidas en la Parte 2 --- */
-    /* "Diario" y "Comunidad" son enlaces normales dentro del
-       mismo <nav>, no necesitan CSS aparte: reutilizan las
-       reglas de .nav-mobile > a de arriba. */
+    /* "Diario" y "Comunidad" son las 2 opciones nuevas que me
+       pidieron agregar al menú. Son simples <a> dentro del mismo
+       nav, por eso no necesitan CSS aparte, ya usan las reglas
+       de .nav-mobile > a de arriba */
 
 
-    /* =====================================================
-       SUBMENÚ RESPONSIVE SIN JAVASCRIPT (Parte 2)
-       Usamos el mismo truco del checkbox oculto, pero con un
-       SEGUNDO input independiente (#toggle-submenu) para la
-       opción "Películas". En móvil funciona como acordeón
-       (tap para abrir/cerrar); en escritorio se muestra como
-       menú desplegable al pasar el mouse (:hover / :focus-within),
-       sin depender del checkbox.
-       ===================================================== */
+    /* Este bloque completo del submenú NO estaba en el código
+       original, lo tuve que armar yo desde cero porque la guía
+       pedía un submenú responsive sin JavaScript para una de las
+       opciones. Usé el mismo truco del checkbox oculto pero con
+       un segundo input (#toggle-submenu) independiente del
+       primero, solo para la opción "Películas" */
     .submenu-item {
       display: flex;
       flex-direction: column;
@@ -216,13 +240,15 @@
       color: var(--moviebox-mostaza);
     }
 
+    /* la flechita que gira cuando el submenú se abre */
     .flecha {
       transition: transform 0.25s ease;
       font-size: 0.75rem;
       color: var(--moviebox-azul);
     }
 
-    /* Submenú (lista de películas) oculto por defecto en móvil */
+    /* en móvil el submenú se comporta como acordeón: empieza
+       oculto y aparece cuando el checkbox de arriba se marca */
     .submenu {
       display: none;
       flex-direction: column;
@@ -231,7 +257,6 @@
       margin-left: 0.6rem;
     }
 
-    /* En móvil: el checkbox del submenú controla el acordeón */
     .toggle-submenu-input:checked ~ .submenu {
       display: flex;
     }
@@ -254,25 +279,26 @@
     }
 
 
-    /* =====================================================
-       PARTE 2 (continuación): VERSIÓN ESCRITORIO
-       En pantallas de 768px en adelante: el botón hamburguesa
-       se oculta y el <nav> se muestra siempre visible, en fila.
-       El submenú pasa a comportarse como un dropdown por hover,
-       usando position:absolute, sin tocar el checkbox.
-       ===================================================== */
+    /* Este media query sí existía en el código original (ocultar
+       la hamburguesa y mostrar el nav en fila en escritorio), yo
+       lo dejé igual y solo le agregué la parte del submenú, que
+       en escritorio ya no depende del checkbox sino que se abre
+       con :hover o :focus-within (para que también funcione con
+       teclado, no solo con mouse) */
     @media (min-width: 768px) {
 
       .hamburguesa { display: none; }
 
       .nav-mobile {
-        display: flex !important; /* el nav ya no depende del checkbox */
+        display: flex !important;
         flex-direction: row;
         align-items: center;
         gap: 0.25rem;
         padding: 0;
       }
 
+      /* esto de aquí para abajo es lo que agregué yo, no estaba
+         en el media query original */
       .submenu-item { position: relative; }
 
       .submenu {
@@ -286,11 +312,9 @@
         padding: 0.4rem;
         margin: 0.4rem 0 0;
         box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-        border-left: none; /* quitamos el estilo de acordeón móvil */
+        border-left: none;
       }
 
-      /* En escritorio el submenú se abre con hover o con foco
-         de teclado (accesible), no con el checkbox */
       .submenu-item:hover .submenu,
       .submenu-item:focus-within .submenu {
         display: flex;
@@ -298,11 +322,9 @@
     }
 
 
-    /* =====================================================
-       CONTENIDO DE EJEMPLO (temática tipo Letterboxd)
-       Solo para dar contexto visual a la entrega; no forma
-       parte de los requisitos del menú.
-       ===================================================== */
+    /* De aquí para abajo ya es puro contenido mío, nada de esto
+       estaba en el código original, lo agregué para que la página
+       no fuera solo el menú y se viera como un sitio real */
     .hero {
       padding: clamp(2.5rem, 8vw, 5rem) 1rem;
       text-align: center;
@@ -330,6 +352,8 @@
       font-size: 1.2rem;
     }
 
+    /* la cuadrícula de pósters, mobile-first: 2 columnas en
+       celular, 3 en tablet y 4 en escritorio */
     .grid-peliculas {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -345,16 +369,17 @@
     }
 
     .poster {
-      aspect-ratio: 2 / 3;      /* relación de aspecto estándar de un póster de cine */
+      aspect-ratio: 2 / 3;
       background: var(--moviebox-fondo-2);
       border-radius: 8px;
       border: 1px solid #4a3a2a;
-      overflow: hidden;         /* recorta la imagen a las esquinas redondeadas */
+      overflow: hidden;
       position: relative;
     }
 
-    /* La imagen del póster llena todo el recuadro. object-fit: cover
-       evita que se deforme, recortando lo que sobre en vez de estirar. */
+    /* uso object-fit: cover para que la imagen del póster llene
+       todo el recuadro sin deformarse, sin importar el tamaño
+       exacto que yo suba */
     .poster img {
       width: 100%;
       height: 100%;
@@ -362,8 +387,8 @@
       display: block;
     }
 
-    /* Título superpuesto abajo de la imagen, con degradado para que
-       el texto se lea aunque el póster sea claro */
+    /* el título va sobrepuesto abajo con un degradado oscuro,
+       así se lee bien aunque el póster tenga colores claros */
     .poster span {
       position: absolute;
       left: 0;
@@ -376,19 +401,123 @@
       font-weight: 600;
     }
 
+
+    /* sección con más información de la plataforma (estadísticas),
+       la agregué para tener más contenido aparte del menú */
+    .info-fondo {
+      background: var(--moviebox-fondo);
+      border-top: 1px solid #4a3a2a;
+      border-bottom: 1px solid #4a3a2a;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .info-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .info-dato {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--moviebox-mostaza);
+    }
+
+    .info-etiqueta {
+      color: #cbbfa8;
+      font-size: 0.9rem;
+    }
+
+
+    /* el footer se me había quedado fuera en la entrega pasada,
+       aquí lo vuelvo a poner con 3 columnas (marca, enlaces de
+       explorar y enlaces institucionales) más una línea de abajo
+       con el copyright */
+    .pie {
+      background: var(--moviebox-fondo);
+      padding: clamp(2rem, 5vw, 3rem) 0 1.25rem;
+    }
+
+    .pie-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .pie-grid { grid-template-columns: 1.3fr 1fr 1fr; }
+    }
+
+    .pie-marca .logo { display: inline-block; margin-bottom: 0.6rem; }
+
+    .pie-marca p {
+      color: #cbbfa8;
+      font-size: 0.9rem;
+      max-width: 320px;
+    }
+
+    .pie-columna h4 {
+      color: var(--moviebox-crema);
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .pie-columna a {
+      display: block;
+      color: #cbbfa8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+    }
+
+    .pie-columna a:hover { color: var(--moviebox-mostaza); }
+
+    .pie-inferior {
+      border-top: 1px solid #4a3a2a;
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #8a7a63;
+    }
+
+    @media (min-width: 768px) {
+      .pie-inferior {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    .pie-inferior a { color: #8a7a63; text-decoration: none; }
+    .pie-inferior a:hover { color: var(--moviebox-mostaza); }
+
   </style>
 </head>
 <body>
 
+  <!-- La estructura del header es la misma idea del ejemplo original:
+       logo, luego el checkbox oculto, luego el label (botón) con
+       sus 3 spans, y después el <nav>. Lo único que cambié aquí
+       fue meterlo dentro de mi <header class="cabecera"> y agregar
+       el submenú de Películas y los 2 links nuevos -->
   <header class="cabecera">
     <div class="contenedor cabecera-interior">
 
       <a href="/" class="logo">MOVIEBOXD</a>
 
-      <!-- PARTE 1: checkbox oculto que controla el estado del menú -->
+      <!-- checkbox oculto, igual que en el original -->
       <input type="checkbox" id="toggle-menu" class="toggle-menu-input">
 
-      <!-- Botón hamburguesa: label vinculado al checkbox de arriba -->
+      <!-- el label sigue apuntando al mismo id que el checkbox,
+           así es como funciona sin necesitar JavaScript -->
       <label for="toggle-menu" class="hamburguesa" aria-label="Abrir menú">
         <span></span>
         <span></span>
@@ -398,7 +527,8 @@
       <nav class="nav-mobile">
         <a href="#">Inicio</a>
 
-        <!-- Submenú responsive sin JavaScript para "Películas" -->
+        <!-- este submenú es lo nuevo que agregué, con su propio
+             checkbox (#toggle-submenu) independiente del de arriba -->
         <div class="submenu-item">
           <input type="checkbox" id="toggle-submenu" class="toggle-submenu-input">
           <label for="toggle-submenu" class="submenu-toggle">
@@ -409,12 +539,20 @@
             <a href="#">The Brown Bunny</a>
             <a href="#">Paris, Texas</a>
             <a href="#">Mysterious Skin</a>
+            <a href="#">Chungking Express</a>
+            <a href="#">Requiem for a Dream</a>
+            <a href="#">Trainspotting</a>
+            <a href="#">Buffalo 66</a>
+            <a href="#">Johnny 316</a>
+            <a href="#">Thesis</a>
+            <a href="#">La Haine</a>
+            <a href="#">Eternal Sunshine Of The Spotless Mind</a>
           </div>
         </div>
 
         <a href="#">Listas</a>
 
-        <!-- Las 2 opciones nuevas que pide la Parte 2 -->
+        <!-- las 2 opciones nuevas que me pidieron agregar -->
         <a href="#">Diario</a>
         <a href="#">Comunidad</a>
       </nav>
@@ -422,6 +560,9 @@
     </div>
   </header>
 
+  <!-- de aquí para abajo ya es contenido de ejemplo, no forma
+       parte de lo que pedía la guía del menú, pero lo dejo para
+       que la página se vea completa -->
   <section class="hero">
     <h1>Lleva el registro de cada película que ves</h1>
     <p>MOVIEBOXD es tu diario de cine: valora, comenta y arma listas con tus películas favoritas.</p>
@@ -429,10 +570,11 @@
 
   <section class="seccion">
     <div class="contenedor">
-      <p class="seccion-titulo">Popular esta semana</p>
+      <p class="seccion-titulo">Peliculas en tu lista</p>
+      <!-- 9 tarjetas de película, solo cambio el src de cada
+           imagen y el texto del span para poner mis propias
+           películas -->
       <div class="grid-peliculas">
-        <!-- Reemplaza el "src" por la ruta de tu imagen, por ejemplo
-             "img/taxi-driver.jpg". Tamaño recomendado más abajo. -->
         <div class="poster">
           <img src="img/taxi.jpg" alt="Póster de Taxi Driver">
           <span>Taxi Driver</span>
@@ -446,12 +588,100 @@
           <span>Paris, Texas</span>
         </div>
         <div class="poster">
-          <img src="img/mis.jpg" alt="Póster de Chinatown">
+          <img src="img/mis.jpg" alt="Póster de Mysterious Skin">
           <span>Mysterious Skin</span>
+        </div>
+        <div class="poster">
+          <img src="img/1.jpg" alt="Póster de Chungking Express">
+          <span>Chungking Express</span>
+        </div>
+        <div class="poster">
+          <img src="img/2.jpg" alt="Póster de Requiem for a Dream">
+          <span>Requiem for a Dream</span>
+        </div>
+        <div class="poster">
+          <img src="img/3.jpg" alt="Póster de Trainspotting">
+          <span>Trainspotting</span>
+        </div>
+        <div class="poster">
+          <img src="img/4.jpg" alt="Póster de Drugstore Cowboy">
+          <span>Buffalo 66</span>
+        </div>
+        <div class="poster">
+          <img src="img/5.jpg" alt="Póster de My Own Private Idaho">
+          <span>Johnny 316</span>
+        </div>
+        <div class="poster">
+          <img src="img/6.jpg" alt="Póster de Trainspotting">
+          <span>Thesis</span>
+        </div>
+        <div class="poster">
+          <img src="img/7.jpg" alt="Póster de Drugstore Cowboy">
+          <span>La Haine</span>
+        </div>
+        <div class="poster">
+          <img src="img/8.jpg" alt="Póster de My Own Private Idaho">
+          <span>Eternal Sunshine Of The Spotless Mind</span>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- sección de estadísticas, la agregué para tener más
+       información en la página aparte del menú -->
+  <section class="seccion info-fondo">
+    <div class="contenedor">
+      <p class="seccion-titulo">MOVIEBOXD en números</p>
+      <div class="info-grid">
+        <div>
+          <p class="info-dato">1,204,600+</p>
+          <p class="info-etiqueta">Películas registradas</p>
+        </div>
+        <div>
+          <p class="info-dato">340,900+</p>
+          <p class="info-etiqueta">Usuarios activos</p>
+        </div>
+        <div>
+          <p class="info-dato">58,300+</p>
+          <p class="info-etiqueta">Listas creadas por la comunidad</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer que se me había olvidado poner la vez pasada -->
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie-grid">
+
+        <div class="pie-marca">
+          <a href="/" class="logo">MOVIEBOXD</a>
+          <p>Tu diario de cine. Registra lo que ves, comparte tu opinión y descubre nuevas películas junto a otros cinéfilos.</p>
+        </div>
+
+        <div class="pie-columna">
+          <h4>Explorar</h4>
+          <a href="#">Películas</a>
+          <a href="#">Listas</a>
+          <a href="#">Diario</a>
+          <a href="#">Comunidad</a>
+        </div>
+
+        <div class="pie-columna">
+          <h4>MOVIEBOXD</h4>
+          <a href="#">Sobre nosotros</a>
+          <a href="#">Preguntas frecuentes</a>
+          <a href="#">Contacto</a>
+        </div>
+
+      </div>
+
+      <div class="pie-inferior">
+        <p>&copy; 2026 MOVIEBOXD. Hecho con HTML y CSS puro.</p>
+        <a href="#">Política de privacidad</a>
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>
